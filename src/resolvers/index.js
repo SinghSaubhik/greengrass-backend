@@ -1,7 +1,13 @@
-import { hello } from "./user";
+import { users, signUp, signIn } from "./user";
 
-export const resolvers = {
+const resolvers = {
   Query: {
-    hello,
+    users,
+  },
+  Mutation: {
+    signUp,
+    signIn,
   },
 };
+
+export { resolvers as default };
