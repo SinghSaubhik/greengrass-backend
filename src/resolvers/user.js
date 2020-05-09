@@ -1,34 +1,45 @@
-import { getToken } from "../utils/utils";
+import { getToken, getUserInfoFromHeaders } from "../utils/utils";
 import User from "../models/user";
 
-// Queries
-export const users = async (parent, args, { db }, info) => {
+
+
+
+/*============================================ Queries ==============================================*/
+export const users = async (parent, args, context, info) => {
   const user = await User.find({}, { password: 0 });
-
-  console.log(user);
-
   return user;
 };
 
-export const me = async (parent, args, context, info) => {};
+export const me = async (parent, args, { headers }, info) => {
+  console.log(headers);
 
-// Mutations
+  const userInfo = getUserInfoFromHeaders(headers);
+  const user = User.findById(userInfo.id, { password: 0 });
+  return user;
+};
+
+/*============================================ Mutations ===========================================*/
 export const signUp = async (parent, { input }, context, info) => {
   const email = input.email;
-  const existingUser = await User.findOne({ email }, "email");
-  // console.log(existingUser);
-
+  const existingUser = await User.exists({ email });
+  console.log(existingUser);
+  
   // If user aleady exists
-  if (existingUser != null) {
-    throw new Error(`User with email: ${existingUser.email}, already exists`);
+  if (existingUser) {
+    throw new Error(`User with email: ${email}, already exists`);
   }
 
   const user = await User.create(input);
-  const token = getToken({ email, name: user.name });
+  console.log(user);
+
+  const id = user._id;
+  const token = getToken({ id, email, name: user.name });
 
   return { user, token };
 };
 
+
+// Sign in
 export const signIn = async (parent, args, context, info) => {
   const user = await User.findOne({ email: args.email });
   console.log(user);
@@ -42,6 +53,7 @@ export const signIn = async (parent, args, context, info) => {
     throw new Error(`Password is incorrect`);
   }
 
-  const token = getToken({ email: user.email, name: user.name });
+  const id = user._id;
+  const token = getToken({ id, email: user.email, name: user.name });
   return { user, token };
 };

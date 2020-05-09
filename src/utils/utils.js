@@ -5,3 +5,14 @@ export const getToken = (args) => {
     expiresIn: "1h",
   });
 };
+
+export const getUserInfoFromHeaders = (headers) => {
+  if (headers && headers.authorization) {
+    const token = headers.authorization.split(" ")[1];
+    const userInfo = jwt.decode(token);
+
+    return userInfo;
+  } else {
+    throw new Error("UnAuthorized");
+  }
+};

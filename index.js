@@ -5,7 +5,6 @@ import mongoose from "mongoose";
 import typeDefs from "./src/schema/index";
 import resolvers from "./src/resolvers/index";
 
-
 const PORT = process.env.PORT || 4000;
 dotenv.config();
 
@@ -25,8 +24,12 @@ mongoose
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  cors: true
+  cors: true,
+  context: ({ req }) => {
+    return { headers: req.headers };
+  },
 });
+
 server.listen({ port: PORT }).then((args) => {
   console.log(`Listening on: ${args.port}`);
 });
