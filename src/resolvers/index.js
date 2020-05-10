@@ -1,21 +1,17 @@
-import { users, signUp, signIn, me } from "./user";
-import { createTest, tests, testUserMap } from "./tests";
+import { Query as userQuery, Mutation as userMutation } from "./user";
+import { testQuery, testMutation, testMappings } from "./tests";
 
 const resolvers = {
   Query: {
-    users,
-    me,
-    tests,
+    ...userQuery,
+    ...testQuery,
   },
   Mutation: {
-    signUp,
-    signIn,
-    createTest,
+    ...userMutation,
+    ...testMutation,
   },
 
-  Test: {
-    author: testUserMap,
-  },
+  ...testMappings,
 };
 
 export { resolvers as default };

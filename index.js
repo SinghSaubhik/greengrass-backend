@@ -1,25 +1,14 @@
 import dotenv from "dotenv";
 import { ApolloServer } from "apollo-server";
-import mongoose from "mongoose";
 
 import typeDefs from "./src/schema/index";
 import resolvers from "./src/resolvers/index";
 
+import connectDatabase from "./database";
+
 const PORT = process.env.PORT || 4000;
+
 dotenv.config();
-
-/*=====================================================================================================*/
-// Connect to database
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:27017`;
-
-mongoose
-  .connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    dbName: "greengrass",
-  })
-  .then(() => console.log("Connected to database"))
-  .catch((err) => console.log(`Error while connecting to db: ${err}`));
 
 const server = new ApolloServer({
   typeDefs,
@@ -30,6 +19,12 @@ const server = new ApolloServer({
   },
 });
 
-server.listen({ port: PORT }).then((args) => {
-  console.log(`Listening on: ${args.port}`);
-});
+connectDatabase()
+  .then(() => {
+    server.listen({ port: PORT }).then((args) => {
+      console.log(`Listening on: ${args.port}`);
+    });
+  })
+  .catch((error) =>
+    console.log(`Error occured in database connection, err: ${error}`)
+  );
