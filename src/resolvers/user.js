@@ -4,9 +4,17 @@ import User from "../models/user";
 /*============================================ Queries ==============================================*/
 const Query = {
   users: async (parent, args, context, info) => {
+    //const searchText = args.searchText;
+
     const user = await User.find({}, { password: 0 });
     return user;
   },
+
+  user: async (parent, args, context, info) => {
+    const user = await User.findById(args.id);
+    return user;
+  },
+
   me: async (parent, args, { headers }, info) => {
     console.log(headers);
 

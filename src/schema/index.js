@@ -1,9 +1,8 @@
-import { gql, makeExecutableSchema } from "apollo-server";
 import userTypeDef from "./user.schema";
 import testTypeDef from "./test.schema";
 import resolvers from "../resolvers/index";
 
-const typeDefs = gql`
+const typeDefs = `
   type Query {
     _empty: String
   }

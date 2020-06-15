@@ -6,7 +6,6 @@ dotenv.config();
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:27017`;
 
 const connectDatabase = () => {
-  console.log(uri);
 
   return mongoose.connect(uri, {
     useNewUrlParser: true,

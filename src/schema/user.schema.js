@@ -1,13 +1,13 @@
-import { gql } from "apollo-server";
-const userTypeDef = gql`
+const userTypeDef = `
   extend type Query {
-    users(userId: ID): [User!]!
+    users(searchText: String, offset: Int, limit: Int): [User!]!
+    user(id: ID!): User!
     me: User!
   }
 
   extend type Mutation {
-    signUp(input: UserInput!): SignUpSignInResponse!
-    signIn(email: String!, password: String!): SignUpSignInResponse!
+    signUp(input: UserInput!): AuthData!
+    signIn(email: String!, password: String!): AuthData!
   }
 
   # Input types
@@ -26,7 +26,7 @@ const userTypeDef = gql`
     userType: UserType
   }
 
-  type SignUpSignInResponse {
+  type AuthData {
     user: User!
     token: String!
   }

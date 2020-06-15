@@ -1,6 +1,4 @@
-import { gql } from "apollo-server";
-
-const testTypeDef = gql`
+const testTypeDef = `
   extend type Query {
     tests(testId: ID): [Test!]!
   }
